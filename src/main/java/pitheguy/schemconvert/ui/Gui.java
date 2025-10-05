@@ -144,22 +144,24 @@ public class Gui extends JFrame {
     }
 
     private void convertMultiple() {
+        File output = new File(outputPathField.getText());
+        SchematicFormat format = formatDropdown.getSelectedFormat();
         try {
-            File output = new File(outputPathField.getText());
-            SchematicFormat format = formatDropdown.getSelectedFormat();
-            new Converter().convert(selectedFiles, output, format);
+            List<File> failedFiles = new Converter().convert(selectedFiles, output, format);
             outputPathField.setText("");
-            JOptionPane.showMessageDialog(this, "Schematics successfully converted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            if (failedFiles.isEmpty())
+                JOptionPane.showMessageDialog(this, "Schematics successfully converted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            else {
+                StringBuilder sb = new StringBuilder();
+                sb.append("The following files failed to convert:\n");
+                for (File file : failedFiles)
+                    sb.append("- ").append(file.getName()).append("\n");
+
+                sb.append("\n\n").append(selectedFiles.length).append(" other files converted successfully!");
+                JOptionPane.showMessageDialog(this, sb.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while reading one of the input files or writing its respective output files to disk.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (NbtException | SchematicParseException e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while parsing one of the schematics. If you're sure it is a valid schematic, please report this!", "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        } catch (ConversionException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "An unexpected error occurred.", "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An unexpected error occurred", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
