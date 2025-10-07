@@ -62,13 +62,13 @@ public class Gui extends JFrame {
             if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File[] selectedFiles = chooser.getSelectedFiles();
                 inputPathField.setText(selectedFiles.length == 1 ? selectedFiles[0].getAbsolutePath() : "Multiple files selected");
-                if (outputPathField.getText().isEmpty()) {
+                if (outputPathField.getText().isEmpty() || selectedFiles.length > 1) {
                     String outputPath = selectedFiles.length == 1 ? Util.stripExtension(selectedFiles[0].getAbsolutePath()) + formatDropdown.getSelectedFormat().getExtension() : selectedFiles[0].getParentFile().getAbsolutePath();
                     outputPathField.setText(outputPath);
                 }
                 this.selectedFiles = selectedFiles;
                 lastPath = selectedFiles[0].getParentFile().getAbsolutePath();
-                outputLabel.setText(selectedFiles.length > 1 ? "Output Folder:" : "Output File:");
+                outputLabel.setText(selectedFiles.length > 1 ? "Output:" : "Output File:");
             }
             updateButtonState();
         });
