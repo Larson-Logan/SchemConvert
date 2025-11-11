@@ -47,7 +47,7 @@ public class NbtSchematicFormat implements SchematicFormat {
     public void write(File file, Schematic schematic) throws IOException {
         int[] size = schematic.getSize();
         if (size[0] > 48 || size[1] > 48 || size[2] > 48)
-            throw new ConversionException("The schematic is too large to use this format!");
+            throw new ConversionException("The NBT schematic format only supports schematics of up to 48x48x48 blocks.");
         CompoundTag tag = new CompoundTag();
         ListTag sizeTag = new ListTag(Tag.TAG_INT);
         for (int i : size) sizeTag.add(new IntTag(i));
