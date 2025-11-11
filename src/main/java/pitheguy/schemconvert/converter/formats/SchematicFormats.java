@@ -10,7 +10,7 @@ public class SchematicFormats {
         return switch (extension) {
             case ".nbt" -> NBT;
             case ".schem" -> SCHEM;
-            case ".litem" -> LITEMATIC;
+            case ".litematic" -> LITEMATIC;
             case ".bp" -> AXIOM;
             default -> throw new IllegalArgumentException("Unknown extension: " + extension);
         };
