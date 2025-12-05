@@ -12,16 +12,21 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        if (args.length == 0) new Gui();
-        else processCommandLine(args);
+        if (args.length == 0)
+            new Gui();
+        else
+            processCommandLine(args);
     }
 
     private static void processCommandLine(String[] args) throws IOException {
         OptionParser parser = new OptionParser();
         parser.accepts("help", "Show this help message").forHelp();
         parser.accepts("input", "Input file").withRequiredArg().ofType(File.class).required();
-        parser.accepts("format", "Output format (One of: nbt, schem, litematic). If not specified, format will be inferred from output file").withRequiredArg().ofType(String.class);
-        parser.accepts("output", "Output file. If not specified, will output to the same folder as the input file.").requiredUnless("format").withRequiredArg().ofType(File.class);
+        parser.accepts("format",
+                "Output format (One of: nbt, schem, litematic). If not specified, format will be inferred from output file")
+                .withRequiredArg().ofType(String.class);
+        parser.accepts("output", "Output file. If not specified, will output to the same folder as the input file.")
+                .requiredUnless("format").withRequiredArg().ofType(File.class);
         OptionSet options;
         try {
             options = parser.parse(args);
@@ -36,6 +41,9 @@ public class Main {
         }
         File inputFile = (File) options.valueOf("input");
         Output output = getOutput(options);
+        if (output == null)
+            return; // Error printed in getOutput
+
         File outputFile = output.file();
         SchematicFormat format = output.format();
         if (!inputFile.exists()) {
@@ -68,7 +76,8 @@ public class Main {
                 return null;
             }
             if (!Util.getExtension(outputFile.getName()).equalsIgnoreCase(format.getExtension()))
-                System.out.println("Warning: output file " + outputFile + " does not match the format " + format.getExtension());
+                System.out.println(
+                        "Warning: output file " + outputFile + " does not match the format " + format.getExtension());
             return new Output((File) options.valueOf("output"), format);
         } else if (options.has("output")) {
             File outputFile = (File) options.valueOf("output");
@@ -92,7 +101,8 @@ public class Main {
             File outputFile = new File(Util.stripExtension(inputFile.getName()) + format.getExtension());
             return new Output(outputFile, format);
         } else {
-            throw new IllegalStateException("Missing both output and format");
+            throw new IllegalStateException("Missing both output and format"); // Should be caught by option parser
+                                                                               // constraints theoretically
         }
     }
 
