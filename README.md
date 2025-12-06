@@ -64,5 +64,23 @@ To build the project yourself, clone the repository and run the Gradle build com
 ./gradlew build
 ```
 
-The executable JAR file will be generated at:
 `build/libs/SchemConvert-1.2.5-all.jar`
+
+## Batch Converter Tool
+
+The project includes a Python helper script to mass-convert files, which can be built into a standalone executable.
+
+### Building the Executable
+
+**Requirements:**
+- Python installed
+- `pyinstaller` installed (`pip install pyinstaller`)
+
+To build the executable, run the provided batch script:
+
+```batch
+.\build_executable.bat
+```
+
+This will create `convert_all.exe` inside `build_artifacts\dist\`. This folder is excluded from git to keep the repository clean.
+

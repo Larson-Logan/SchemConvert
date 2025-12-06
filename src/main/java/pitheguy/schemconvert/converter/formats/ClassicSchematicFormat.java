@@ -8,8 +8,6 @@ import pitheguy.schemconvert.nbt.tags.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClassicSchematicFormat implements SchematicFormat {
 
