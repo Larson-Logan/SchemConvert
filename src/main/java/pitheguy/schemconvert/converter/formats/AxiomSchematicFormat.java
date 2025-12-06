@@ -22,7 +22,7 @@ public class AxiomSchematicFormat implements SchematicFormat {
             int headerTagSize = in.readInt();
             in.readNBytes(headerTagSize);
             int thumbnailLength = in.readInt();
-            in.readNBytes(thumbnailLength);
+            byte[] thumbnail = in.readNBytes(thumbnailLength);
             int blockDataLength = in.readInt();
             byte[] blockData = in.readNBytes(blockDataLength);
             DataInputStream blockDataStream = new DataInputStream(
@@ -49,7 +49,7 @@ public class AxiomSchematicFormat implements SchematicFormat {
             int[] size = { (maxX - minX + 1) * 16, (maxY - minY + 1) * 16, (maxZ - minZ + 1) * 16 };
             int dataVersion = blockDataTag.contains("DataVersion", Tag.TAG_INT) ? blockDataTag.getInt("DataVersion")
                     : -1;
-            Schematic.Builder builder = new Schematic.Builder(file, dataVersion, size);
+            Schematic.Builder builder = new Schematic.Builder(file, dataVersion, size).setThumbnail(thumbnail);
             for (Tag tag : blockRegions) {
                 CompoundTag region = (CompoundTag) tag;
                 CompoundTag blockStatesTag = region.getCompound("BlockStates");
@@ -105,7 +105,7 @@ public class AxiomSchematicFormat implements SchematicFormat {
         DataOutputStream out = new DataOutputStream(new FileOutputStream(file));
         out.writeInt(MAGIC);
         writeHeader(out, schematic);
-        writeThumbnail(out);
+        writeThumbnail(out, schematic);
         writeBlockData(out, schematic);
         out.close();
     }
@@ -127,12 +127,17 @@ public class AxiomSchematicFormat implements SchematicFormat {
         out.write(stream.toByteArray());
     }
 
-    private void writeThumbnail(DataOutputStream out) throws IOException {
-        try (InputStream stream = AxiomSchematicFormat.class.getResourceAsStream("/icon.png")) {
-            if (stream == null)
-                throw new IOException("Icon not found");
-            out.writeInt(stream.available());
-            out.write(stream.readAllBytes());
+    private void writeThumbnail(DataOutputStream out, Schematic schematic) throws IOException {
+        if (schematic.getThumbnail() != null && schematic.getThumbnail().length > 0) {
+            out.writeInt(schematic.getThumbnail().length);
+            out.write(schematic.getThumbnail());
+        } else {
+            try (InputStream stream = AxiomSchematicFormat.class.getResourceAsStream("/icon.png")) {
+                if (stream == null)
+                    throw new IOException("Icon not found");
+                out.writeInt(stream.available());
+                out.write(stream.readAllBytes());
+            }
         }
     }
 

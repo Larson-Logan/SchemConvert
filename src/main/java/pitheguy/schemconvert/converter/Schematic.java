@@ -15,15 +15,21 @@ public class Schematic {
     private final List<Entity> entities;
     private final int dataVersion;
     private final File sourceFile;
+    private final byte[] thumbnail;
 
     private Schematic(String[][][] blocks, List<String> palette, Map<Pos, CompoundTag> blockEntities,
-            List<Entity> entities, int dataVersion, File sourceFile) {
+            List<Entity> entities, int dataVersion, File sourceFile, byte[] thumbnail) {
         this.blocks = blocks;
         this.palette = palette;
         this.blockEntities = blockEntities;
         this.entities = entities;
         this.dataVersion = dataVersion;
         this.sourceFile = sourceFile;
+        this.thumbnail = thumbnail;
+    }
+
+    public byte[] getThumbnail() {
+        return thumbnail;
     }
 
     public static Schematic read(File file) throws IOException {
@@ -150,8 +156,16 @@ public class Schematic {
             return this;
         }
 
+        private byte[] thumbnail;
+
+        public Builder setThumbnail(byte[] thumbnail) {
+            this.thumbnail = thumbnail;
+            return this;
+        }
+
         public Schematic build() {
-            return new Schematic(blocks, palette.stream().toList(), blockEntities, entities, dataVersion, sourceFile);
+            return new Schematic(blocks, palette.stream().toList(), blockEntities, entities, dataVersion, sourceFile,
+                    thumbnail);
         }
     }
 }
