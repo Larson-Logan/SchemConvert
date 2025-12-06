@@ -25,7 +25,7 @@ A lightweight and powerful tool to convert between different Minecraft schematic
 Run the tool from the terminal:
 
 ```bash
-java -jar build/libs/SchemConvert-1.2.5-all.jar -input <input_file> -format <output_format> -output <output_file>
+java -jar build/libs/SchemConvert-1.3.0-all.jar -input <input_file> -format <output_format> -output <output_file>
 ```
 
 **Arguments:**
@@ -39,13 +39,13 @@ java -jar build/libs/SchemConvert-1.2.5-all.jar -input <input_file> -format <out
 Convert a legacy file to a modern Sponge schematic:
 
 ```bash
-java -jar SchemConvert.jar -input house.schematic -format schem -output house.schem
+java -jar SchemConvert-1.3.0-all.jar -input house.schematic -format schem -output house.schem
 ```
 
 Convert a Litematic to Axiom Blueprint:
 
 ```bash
-java -jar SchemConvert.jar -input castle.litematic -format bp
+java -jar SchemConvert-1.3.0-all.jar -input castle.litematic -format bp
 ```
 
 ### Graphical User Interface (GUI)
@@ -53,7 +53,7 @@ java -jar SchemConvert.jar -input castle.litematic -format bp
 Simply double-click the JAR file or run it without arguments:
 
 ```bash
-java -jar SchemConvert.jar
+java -jar SchemConvert-1.3.0-all.jar
 ```
 
 ## Building from Source
