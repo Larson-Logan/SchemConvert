@@ -6,80 +6,59 @@ A lightweight and powerful tool to convert between different Minecraft schematic
 
 ## Supported Formats
 
-- **`.nbt`**: Vanilla Minecraft Structure blocks.
-- **`.schem`**: Modern Sponge schematic format (used by WorldEdit, MCEdit Unified).
-- **`.litematic`**: Litematica mod format.
-- **`.bp`**: Axiom mod blueprints.
-- **`.schematic`**: Legacy MCEdit/WorldEdit format (Supports reading & writing).
+- `.nbt`: Vanilla Minecraft Structure blocks.
+- `.schem`: Modern Sponge schematic format (used by WorldEdit, MCEdit Unified).
+- `.litematic`: Litematica mod format.
+- `.bp`: Axiom mod blueprints.
+- `.schematic`: Legacy MCEdit/WorldEdit format (supports reading & writing).
 
 ## Features
 
 - **Cross-Format Conversion**: Convert freely between any of the supported formats.
-- **Legacy Support**: Full support for reading and writing the legacy `.schematic` (MCEdit/Classic WorldEdit) format, automatically handling block ID to BlockState conversions.
-- **Batch Conversion**: Mass-convert entire folders of schematics recursively using the new Python helper script.
-- **Thumbnail Preservation**: Correctly reads and preserves embedded preview images (thumbnails) when converting Axiom `.bp` files.
-- **Procedural Texture Generation**: Automatically generates high-quality isometric previews for blocks (like logs, planks, and bricks) without needing any external resource packs or textures.
+- **Legacy Support**: Full support for reading and writing the legacy `.schematic` format.
+- **Batch Conversion**: Recursively convert entire folders of schematics using the Python helper script.
+- **Procedural Texture Generation**: Generates high‑quality 16×16 pixel‑art textures (logs, planks, bricks, leaves, etc.) internally, so previews work without an external `textures/` folder.
+- **External Textures (Optional)**: Place a `textures/block/` directory next to the JAR to override generated textures with custom assets.
+- **Thumbnail Preservation**: Preserves embedded preview images when converting Axiom `.bp` files.
 - **CLI & GUI**: Run from the command line for automation, or launch without arguments for a graphical interface.
 
 ## Usage
 
 ### Command Line Interface (CLI)
 
-Run the tool from the terminal:
-
 ```bash
-java -jar build/libs/SchemConvert-1.3.0-all.jar -input <input_file> -format <output_format> -output <output_file>
+java -jar build/libs/SchemConvert-1.3.1-all.jar -input <input_file> -format <output_format> -output <output_file>
 ```
 
 **Arguments:**
 
 - `-input`: Path to the source file to convert.
-- `-format`: (Optional) Desired output format/extension (e.g., `schem`, `litematic`, `bp`, `nbt`, `schematic`). If omitted, it attempts to infer from the output filename.
-- `-output`: (Optional) Path for the converted file. If omitted, saves to the same directory with the new extension.
+- `-format` (optional): Desired output format/extension (e.g., `schem`, `litematic`, `bp`, `nbt`, `schematic`). If omitted, inferred from the output filename.
+- `-output` (optional): Path for the converted file. If omitted, saves to the same directory with the new extension.
 
-**Examples:**
+### External Textures (Optional)
 
-Convert a legacy file to a modern Sponge schematic:
-
-```bash
-java -jar SchemConvert-1.3.0-all.jar -input house.schematic -format schem -output house.schem
-```
-
-Convert a Litematic to Axiom Blueprint:
-
-```bash
-java -jar SchemConvert-1.3.0-all.jar -input castle.litematic -format bp
-```
-
-### Graphical User Interface (GUI)
-
-Simply double-click the JAR file or run it without arguments:
-
-```bash
-java -jar SchemConvert-1.3.0-all.jar
-```
+You can optionally place a `textures/block/` folder next to the executable to use your own resource‑pack textures for the previews. If omitted, the tool will automatically generate high‑quality procedural textures.
 
 ## Building from Source
 
 To build the project yourself, clone the repository and run the automated release script:
 
 ```bash
-.\scripts\build_release.bat
+./scripts/build_release.bat
 ```
-
-This will build both the Java JAR and the Python executable.
 
 Alternatively, you can run the Gradle build command directly:
 
 ```bash
-.\scripts\gradlew build
+./scripts/gradlew build
 ```
 
-`build/libs/SchemConvert-1.3.0-all.jar`
+The resulting JAR is located at `build/libs/SchemConvert-1.3.1-all.jar`.
 
 ## Batch Converter Tool
 
-The project includes a Python helper script to mass-convert files, which can be built into a standalone executable.
+The project includes a Python helper script to mass‑convert files, which can be built into a standalone executable.
 
 ### Building the Executable
 
@@ -91,34 +70,29 @@ The project includes a Python helper script to mass-convert files, which can be 
 To build the executable, run the provided batch script:
 
 ```batch
-.\scripts\build_executable.bat
+./scripts/build_executable.bat
 ```
 
-This will create `convert_all.exe` inside `build_artifacts\dist\`. This folder is excluded from git to keep the repository clean.
+This will create `convert_all.exe` inside `build_artifacts/dist/`.
 
 ### Batch Tool Usage
 
-The batch converter recursively scours directories for schematic files and converts them using the main `SchemConvert` JAR.
-
-**Syntax:**
-
 ```bash
-convert_all.exe -j <path_to_jar> [options]
+convert_all.exe -j <path_to_jar> -d <root_directory> -o <output_directory> -f <target_format>
 ```
 
-**Options:**
-
-- `-j`, `--jar`: Path to the `SchemConvert` JAR file (Required).
-- `-d`, `--directory`: Root directory to scan for files (Default: current directory).
-- `-o`, `--output`: Directory to save converted files (Default: same as input).
-- `-e`, `--extensions`: Comma-separated list of extensions to convert (Default: `.schem,.schematic,.nbt,.dp`).
+- `-j`, `--jar`: Path to the `SchemConvert` JAR file (required).
+- `-d`, `--directory`: Root directory to scan for files (default: current directory).
+- `-o`, `--output`: Directory to save converted files (default: same as input).
+- `-e`, `--extensions`: Comma‑separated list of extensions to convert (default: `.schem,.schematic,.nbt,.dp`).
+- `-f`, `--format`: Target output format/extension (e.g., `bp`, `schem`, `schematic`).
 
 **Example:**
 
 ```bash
-convert_all.exe -j SchemConvert-1.3.0-all.jar -d ./my_schematics -o ./converted_blueprints
+convert_all.exe -j SchemConvert-1.3.1-all.jar -d ./my_schematics -o ./converted_blueprints -f bp
 ```
 
-### External Textures (Optional)
+---
 
-You can optionally place a `textures/block/` folder next to the executable to use your own resource pack textures for the previews. If omitted, the tool will automatically use its internal procedural generation to create high-quality previews.
+*The README now accurately reflects the current capabilities of SchemConvert, including the new procedural texture generation and optional external textures.*
