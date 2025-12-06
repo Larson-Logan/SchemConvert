@@ -14,7 +14,6 @@ options:
                         Comma-separated list of accepted input file extensions (e.g., .schem,.nbt)
 """
 
-import os
 import subprocess
 import argparse
 from pathlib import Path
@@ -85,21 +84,26 @@ def scan_and_convert(directory, jar_name, extensions, output_dir):
         extensions (list): A list of accepted file extensions (e.g., ['.schem', '.nbt']).
         output_dir (str): The specified output directory path.
     """
-    found_files = []
+    
     # Ensure extensions are correctly formatted with leading dots for comparison
-    formatted_extensions = [f".{ext.strip('.')}" for ext in extensions]
+    # Use a set for faster lookup
+    formatted_extensions = {f".{ext.strip('.')}".lower() for ext in extensions}
 
-    # os.walk generates file names in a directory tree by walking the tree top-down
-    for root, _, files in os.walk(directory):
-        for file in files:
-            file_path = Path(root) / file
-            # Check if the file's extension (converted to lowercase) is in our accepted list
-            if file_path.suffix.lower() in formatted_extensions:
-                found_files.append(file_path)
+    source_path = Path(directory)
+    if not source_path.exists():
+        print(f"Directory not found: {directory}")
+        return
+
+    found_files = []
+    
+    # use rglob("*") to recursively check all subfiles and subfolders
+    for file_path in source_path.rglob("*"):
+        if file_path.is_file() and file_path.suffix.lower() in formatted_extensions:
+            found_files.append(file_path)
     
     if not found_files:
         # Provide feedback if no relevant files are found
-        print(f"No files found in '{directory}' with extensions {formatted_extensions}.")
+        print(f"No files found in '{directory}' with extensions {list(formatted_extensions)}.")
         return
 
     print(f"Found {len(found_files)} files to convert using {jar_name}.")
