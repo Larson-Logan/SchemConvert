@@ -73,6 +73,7 @@ The project includes a Python helper script to mass-convert files, which can be 
 ### Building the Executable
 
 **Requirements:**
+
 - Python installed
 - `pyinstaller` installed (`pip install pyinstaller`)
 
@@ -84,3 +85,25 @@ To build the executable, run the provided batch script:
 
 This will create `convert_all.exe` inside `build_artifacts\dist\`. This folder is excluded from git to keep the repository clean.
 
+### Batch Tool Usage
+
+The batch converter recursively scours directories for schematic files and converts them using the main `SchemConvert` JAR.
+
+**Syntax:**
+
+```bash
+convert_all.exe -j <path_to_jar> [options]
+```
+
+**Options:**
+
+- `-j`, `--jar`: Path to the `SchemConvert` JAR file (Required).
+- `-d`, `--directory`: Root directory to scan for files (Default: current directory).
+- `-o`, `--output`: Directory to save converted files (Default: same as input).
+- `-e`, `--extensions`: Comma-separated list of extensions to convert (Default: `.schem,.schematic,.nbt,.dp`).
+
+**Example:**
+
+```bash
+convert_all.exe -j SchemConvert.jar -d ./my_schematics -o ./converted_blueprints
+```
