@@ -18,7 +18,50 @@ import subprocess
 import argparse
 from pathlib import Path
 
-def convert_file(jar_name, input_file_path, output_directory):
+def scan_and_convert(directory, jar_name, extensions, output_dir, output_format):
+    """
+    Scans a directory and subdirectories for accepted file types and initiates conversion for each.
+
+    Args:
+        directory (str): The root directory to start scanning from.
+        jar_name (str): The name/path of the JAR executable.
+        extensions (list): A list of accepted file extensions (e.g., ['.schem', '.nbt']).
+        output_dir (str): The specified output directory path.
+        output_format (str): The target format extension (e.g., 'schem', 'bp').
+    """
+    
+    # Ensure extensions are correctly formatted with leading dots for comparison
+    # Use a set for faster lookup
+    formatted_extensions = {f".{ext.strip('.')}".lower() for ext in extensions}
+    
+    # Ensure output format has no leading dot for the CLI arg, but we need dot for filename
+    format_ext = f".{output_format.strip('.')}"
+    format_arg = output_format.strip('.')
+
+    source_path = Path(directory)
+    if not source_path.exists():
+        print(f"Directory not found: {directory}")
+        return
+
+    found_files = []
+    
+    # use rglob("*") to recursively check all subfiles and subfolders
+    for file_path in source_path.rglob("*"):
+        if file_path.is_file() and file_path.suffix.lower() in formatted_extensions:
+            found_files.append(file_path)
+    
+    if not found_files:
+        # Provide feedback if no relevant files are found
+        print(f"No files found in '{directory}' with extensions {list(formatted_extensions)}.")
+        return
+
+    print(f"Found {len(found_files)} files to convert using {jar_name}.")
+    # Iterate through all found files and call the conversion function
+    for file_path in found_files:
+        convert_file(jar_name, file_path, output_dir, format_ext, format_arg)
+
+
+def convert_file(jar_name, input_file_path, output_directory, output_extension, output_format):
     """
     Runs the java command for a single file conversion using the specified JAR.
 
@@ -26,9 +69,11 @@ def convert_file(jar_name, input_file_path, output_directory):
         jar_name (str): The name/path of the JAR executable.
         input_file_path (Path): The full path to the input file to convert.
         output_directory (str): The specified output directory path.
+        output_extension (str): The extension to use for the output file (e.g., .bp).
+        output_format (str): The format argument for the JAR (e.g., bp).
     """
-    # Create the output filename by taking the input filename's base name (stem) and adding the new extension (.bp)
-    output_filename = Path(input_file_path).stem + ".bp"
+    # Create the output filename by taking the input filename's base name (stem) and adding the new extension
+    output_filename = Path(input_file_path).stem + output_extension
     
     # Determine the full output path
     if output_directory == ".":
@@ -49,7 +94,9 @@ def convert_file(jar_name, input_file_path, output_directory):
         "-input",        # The input flag expected by the JAR tool
         str(input_file_path), # The full path of the input file
         "-output",       # The output flag expected by the JAR tool
-        str(output_file_path) # The full path of the desired output file
+        str(output_file_path), # The full path of the desired output file
+        "-format",
+        output_format
     ]
     
     print(f"Converting: {input_file_path}")
@@ -72,44 +119,6 @@ def convert_file(jar_name, input_file_path, output_directory):
         print(f"Error executing command: {e}")
         print("Ensure 'java' is in your system's PATH and the JAR file path is correct.")
     print("-" * 40) # Print a separator for readability
-
-
-def scan_and_convert(directory, jar_name, extensions, output_dir):
-    """
-    Scans a directory and subdirectories for accepted file types and initiates conversion for each.
-
-    Args:
-        directory (str): The root directory to start scanning from.
-        jar_name (str): The name/path of the JAR executable.
-        extensions (list): A list of accepted file extensions (e.g., ['.schem', '.nbt']).
-        output_dir (str): The specified output directory path.
-    """
-    
-    # Ensure extensions are correctly formatted with leading dots for comparison
-    # Use a set for faster lookup
-    formatted_extensions = {f".{ext.strip('.')}".lower() for ext in extensions}
-
-    source_path = Path(directory)
-    if not source_path.exists():
-        print(f"Directory not found: {directory}")
-        return
-
-    found_files = []
-    
-    # use rglob("*") to recursively check all subfiles and subfolders
-    for file_path in source_path.rglob("*"):
-        if file_path.is_file() and file_path.suffix.lower() in formatted_extensions:
-            found_files.append(file_path)
-    
-    if not found_files:
-        # Provide feedback if no relevant files are found
-        print(f"No files found in '{directory}' with extensions {list(formatted_extensions)}.")
-        return
-
-    print(f"Found {len(found_files)} files to convert using {jar_name}.")
-    # Iterate through all found files and call the conversion function
-    for file_path in found_files:
-        convert_file(jar_name, file_path, output_dir)
 
 
 if __name__ == "__main__":
@@ -135,14 +144,20 @@ if __name__ == "__main__":
         "-o", "--output", 
         type=str, 
         default=".",
-        help="The directory to save the output .bp files (default: same as input file directory)"
+        help="The directory to save the output files (default: same as input file directory)"
     )
     parser.add_argument(
         "-e", "--extensions", 
         type=str, 
-        # Added .dp to the default list of accepted extensions
-        default=".schem,.schematic,.nbt,.dp", 
+        # Default list of accepted input file extensions
+        default=".schem,.schematic,.nbt,.bp,.litematic", 
         help="Comma-separated list of accepted input file extensions (e.g., .schem,.nbt)"
+    )
+    parser.add_argument(
+        "-f", "--format",
+        type=str,
+        required=True,
+        help="The target output format/extension (e.g., bp, schem, schematic)"
     )
 
     # Parse the arguments provided by the user in the command line
@@ -156,5 +171,6 @@ if __name__ == "__main__":
         directory=args.directory,
         jar_name=args.jar,
         extensions=extensions_list,
-        output_dir=args.output
+        output_dir=args.output,
+        output_format=args.format
     )
