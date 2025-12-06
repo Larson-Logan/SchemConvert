@@ -74,7 +74,8 @@ public class NbtUtil {
                 properties.put(key, new StringTag(value));
             }
             tag.put("Properties", properties);
-        } else tag.put("Name", new StringTag(block));
+        } else
+            tag.put("Name", new StringTag(block));
         return tag;
     }
 
