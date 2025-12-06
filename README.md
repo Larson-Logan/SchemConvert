@@ -15,8 +15,10 @@ A lightweight and powerful tool to convert between different Minecraft schematic
 ## Features
 
 - **Cross-Format Conversion**: Convert freely between any of the supported formats.
-- **Legacy Support**: Full support for reading and writing the classic `.schematic` format, automatically handling block ID to BlockState conversions using built-in mappings.
-- **CLI & GUI**: Run from the command line for batch processing or automation, or launch without arguments for a graphical interface.
+- **Legacy Support**: Full support for reading and writing the legacy `.schematic` (MCEdit/Classic WorldEdit) format, automatically handling block ID to BlockState conversions.
+- **Batch Conversion**: Mass-convert entire folders of schematics recursively using the new Python helper script.
+- **Thumbnail Preservation**: Correctly reads and preserves embedded preview images (thumbnails) when converting Axiom `.bp` files.
+- **CLI & GUI**: Run from the command line for automation, or launch without arguments for a graphical interface.
 
 ## Usage
 
