@@ -64,7 +64,7 @@ To build the project yourself, clone the repository and run the Gradle build com
 ./gradlew build
 ```
 
-`build/libs/SchemConvert-1.2.5-all.jar`
+`build/libs/SchemConvert-1.3.0-all.jar`
 
 ## Batch Converter Tool
 
@@ -105,5 +105,5 @@ convert_all.exe -j <path_to_jar> [options]
 **Example:**
 
 ```bash
-convert_all.exe -j SchemConvert.jar -d ./my_schematics -o ./converted_blueprints
+convert_all.exe -j SchemConvert-1.3.0-all.jar -d ./my_schematics -o ./converted_blueprints
 ```
