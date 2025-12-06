@@ -54,24 +54,30 @@ public class NbtSchematicFormat implements SchematicFormat {
     public void write(File file, Schematic schematic) throws IOException {
         int[] size = schematic.getSize();
         if (size[0] > 48 || size[1] > 48 || size[2] > 48)
-            throw new ConversionException("The NBT schematic format only supports schematics of up to 48x48x48 blocks.");
+            throw new ConversionException(
+                    "The NBT schematic format only supports schematics of up to 48x48x48 blocks.");
         CompoundTag tag = new CompoundTag();
         ListTag sizeTag = new ListTag(Tag.TAG_INT);
-        for (int i : size) sizeTag.add(new IntTag(i));
+        for (int i : size)
+            sizeTag.add(new IntTag(i));
         ListTag paletteTag = new ListTag(Tag.TAG_COMPOUND);
-        for (String block : schematic.getPalette()) paletteTag.add(NbtUtil.convertFromBlockString(block));
+        for (String block : schematic.getPalette())
+            paletteTag.add(NbtUtil.convertFromBlockString(block));
         ListTag blocksTag = new ListTag(Tag.TAG_COMPOUND);
         for (int x = 0; x < size[0]; x++) {
             for (int y = 0; y < size[1]; y++) {
                 for (int z = 0; z < size[2]; z++) {
                     int state = schematic.getPaletteBlock(x, y, z);
-                    if (state == -1) continue;
+                    if (state == -1)
+                        continue;
                     ListTag posTag = new ListTag(Tag.TAG_INT);
-                    for (int i : new int[]{x, y, z}) posTag.add(new IntTag(i));
+                    for (int i : new int[] { x, y, z })
+                        posTag.add(new IntTag(i));
                     CompoundTag entry = new CompoundTag();
                     entry.put("pos", posTag);
                     entry.put("state", new IntTag(state));
-                    if (schematic.hasBlockEntityAt(x, y, z)) entry.put("nbt", schematic.getBlockEntityAt(x, y, z));
+                    if (schematic.hasBlockEntityAt(x, y, z))
+                        entry.put("nbt", schematic.getBlockEntityAt(x, y, z));
                     blocksTag.add(entry);
                 }
             }
