@@ -93,4 +93,42 @@ public class NbtUtil {
         }
         return sb.toString();
     }
+
+    public static int getInt(Tag tag) {
+        if (tag instanceof IntTag intTag)
+            return intTag.value();
+        if (tag instanceof ShortTag shortTag)
+            return shortTag.value();
+        if (tag instanceof ByteTag byteTag)
+            return byteTag.value();
+        if (tag instanceof DoubleTag doubleTag)
+            return (int) doubleTag.value();
+        if (tag instanceof FloatTag floatTag)
+            return (int) floatTag.value();
+        if (tag instanceof LongTag longTag)
+            return (int) longTag.value();
+        throw new NbtException("Tag " + tag.getClass().getSimpleName() + " is not a number");
+    }
+
+    public static double getDouble(Tag tag) {
+        if (tag instanceof DoubleTag doubleTag)
+            return doubleTag.value();
+        if (tag instanceof FloatTag floatTag)
+            return floatTag.value();
+        if (tag instanceof IntTag intTag)
+            return intTag.value();
+        if (tag instanceof LongTag longTag)
+            return longTag.value();
+        if (tag instanceof ShortTag shortTag)
+            return shortTag.value();
+        if (tag instanceof ByteTag byteTag)
+            return byteTag.value();
+        throw new NbtException("Tag " + tag.getClass().getSimpleName() + " is not a number");
+    }
+
+    public static CompoundTag getCompound(Tag tag) {
+        if (tag instanceof CompoundTag compoundTag)
+            return compoundTag;
+        throw new NbtException("Tag " + tag.getClass().getSimpleName() + " is not a compound tag");
+    }
 }
