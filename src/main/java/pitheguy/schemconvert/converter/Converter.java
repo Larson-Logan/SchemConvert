@@ -14,6 +14,9 @@ public class Converter {
 
     public void convert(File input, File output, SchematicFormat outputFormat) throws IOException, ConversionException {
         Schematic schematic = Schematic.read(input);
+        if (outputFormat.getExtension().equals(".bp") && schematic.getThumbnail() == null) {
+            schematic = schematic.withThumbnail(ThumbnailGenerator.generate(schematic));
+        }
         schematic.write(output, outputFormat);
     }
 
@@ -25,6 +28,9 @@ public class Converter {
         for (File file : inputs) {
             try {
                 Schematic schematic = Schematic.read(file);
+                if (outputFormat.getExtension().equals(".bp") && schematic.getThumbnail() == null) {
+                    schematic = schematic.withThumbnail(ThumbnailGenerator.generate(schematic));
+                }
                 File outputFile = new File(outputDir,
                         Util.stripExtension(file.getName()) + outputFormat.getExtension());
                 schematic.write(outputFile, outputFormat);

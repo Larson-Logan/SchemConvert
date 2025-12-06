@@ -32,6 +32,10 @@ public class Schematic {
         return thumbnail;
     }
 
+    public Schematic withThumbnail(byte[] thumbnail) {
+        return new Schematic(blocks, palette, blockEntities, entities, dataVersion, sourceFile, thumbnail);
+    }
+
     public static Schematic read(File file) throws IOException {
         String extension = Util.getExtension(file.getName());
         return switch (extension) {

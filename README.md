@@ -18,6 +18,7 @@ A lightweight and powerful tool to convert between different Minecraft schematic
 - **Legacy Support**: Full support for reading and writing the legacy `.schematic` (MCEdit/Classic WorldEdit) format, automatically handling block ID to BlockState conversions.
 - **Batch Conversion**: Mass-convert entire folders of schematics recursively using the new Python helper script.
 - **Thumbnail Preservation**: Correctly reads and preserves embedded preview images (thumbnails) when converting Axiom `.bp` files.
+- **Procedural Texture Generation**: Automatically generates high-quality isometric previews for blocks (like logs, planks, and bricks) without needing any external resource packs or textures.
 - **CLI & GUI**: Run from the command line for automation, or launch without arguments for a graphical interface.
 
 ## Usage
@@ -117,3 +118,7 @@ convert_all.exe -j <path_to_jar> [options]
 ```bash
 convert_all.exe -j SchemConvert-1.3.0-all.jar -d ./my_schematics -o ./converted_blueprints
 ```
+
+### External Textures (Optional)
+
+You can optionally place a `textures/block/` folder next to the executable to use your own resource pack textures for the previews. If omitted, the tool will automatically use its internal procedural generation to create high-quality previews.
