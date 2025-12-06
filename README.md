@@ -67,6 +67,7 @@ To build the project yourself, clone the repository and run the automated releas
 This will build both the Java JAR and the Python executable.
 
 Alternatively, you can run the Gradle build command directly:
+
 ```bash
 .\scripts\gradlew build
 ```
