@@ -29,21 +29,23 @@ public class NbtUtil {
     public static CompoundTag read(File file) throws IOException {
         DataInputStream in = new DataInputStream(new GZIPInputStream(new FileInputStream(file)));
         byte type = in.readByte();
-        if (type != Tag.TAG_COMPOUND) throw new NbtException("File isn't in NBT format");
+        if (type != Tag.TAG_COMPOUND)
+            throw new NbtException("File isn't in NBT format");
         in.readUTF();
         return (CompoundTag) readByType(type, in);
     }
 
     public static CompoundTag read(DataInputStream in) throws IOException {
         byte type = in.readByte();
-        if (type != Tag.TAG_COMPOUND) throw new NbtException("Not in NBT format");
+        if (type != Tag.TAG_COMPOUND)
+            throw new NbtException("Not in NBT format");
         in.readUTF();
         return (CompoundTag) readByType(type, in);
     }
 
     public static void write(Tag tag, File file) throws IOException {
         try (GZIPOutputStream gzip = new GZIPOutputStream(new FileOutputStream(file));
-             DataOutputStream out = new DataOutputStream(gzip)) {
+                DataOutputStream out = new DataOutputStream(gzip)) {
             out.write(tag.getType());
             out.writeUTF("");
             tag.writeContents(out);

@@ -57,9 +57,10 @@ public class Main {
             System.out.println("Successfully converted " + inputFile + " to " + outputFile);
         } catch (IOException e) {
             printError("An error occurred reading or writing to disk: " + e.getMessage());
-        } catch (ConversionException e) {
+        } catch (ConversionException | pitheguy.schemconvert.nbt.NbtException e) {
             printError(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             printError("An error occurred while converting " + inputFile + " to " + outputFile);
         }
     }
