@@ -58,10 +58,17 @@ java -jar SchemConvert-1.3.0-all.jar
 
 ## Building from Source
 
-To build the project yourself, clone the repository and run the Gradle build command:
+To build the project yourself, clone the repository and run the automated release script:
 
 ```bash
-./gradlew build
+.\scripts\build_release.bat
+```
+
+This will build both the Java JAR and the Python executable.
+
+Alternatively, you can run the Gradle build command directly:
+```bash
+.\scripts\gradlew build
 ```
 
 `build/libs/SchemConvert-1.3.0-all.jar`
@@ -80,7 +87,7 @@ The project includes a Python helper script to mass-convert files, which can be 
 To build the executable, run the provided batch script:
 
 ```batch
-.\build_executable.bat
+.\scripts\build_executable.bat
 ```
 
 This will create `convert_all.exe` inside `build_artifacts\dist\`. This folder is excluded from git to keep the repository clean.
